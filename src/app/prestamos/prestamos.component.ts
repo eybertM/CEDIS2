@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import jsPDF from 'jspdf';
 
 interface Prestamo {
   id: number;
@@ -402,7 +403,132 @@ export class PrestamosComponent implements OnInit {
 
   onConfirmDownload(): void {
     const selectedPrestamos = this.getSelectedPrestamos();
-    console.log('Descargando préstamos:', selectedPrestamos);
+    this.generatePDF(selectedPrestamos);
     this.showDownloadConfirmModal = false;
+  }
+
+  private generatePDF(prestamos: Prestamo[]): void {
+    const doc = new jsPDF();
+    
+    // Set document properties
+    doc.setProperties({
+      title: 'Reporte de Préstamos',
+      subject: 'Lista de préstamos seleccionados',
+      author: 'Sistema de Biblioteca',
+      creator: 'Centro de Documentación'
+    });
+
+    // Add header
+    doc.setFontSize(20);
+    doc.setTextColor(220, 53, 69); // Red color
+    doc.text('Centro de Documentación de Ingeniería de Sistemas', 20, 20);
+    
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Reporte de Préstamos', 20, 35);
+    
+    // Add generation date
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    const currentDate = new Date().toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+    doc.text(`Generado el: ${currentDate}`, 20, 45);
+    
+    // Add summary
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    doc.text(`Total de préstamos: ${prestamos.length}`, 20, 60);
+    
+    // Create table headers
+    const headers = ['N°', 'Fecha', 'Lector', 'Bibliografía', 'Estado'];
+    const columnWidths = [15, 30, 50, 60, 25];
+    let yPosition = 80;
+    
+    // Add table headers
+    doc.setFontSize(10);
+    doc.setTextColor(255, 255, 255);
+    doc.setFillColor(220, 53, 69);
+    
+    let xPosition = 20;
+    headers.forEach((header, index) => {
+      doc.rect(xPosition, yPosition - 5, columnWidths[index], 8, 'F');
+      doc.text(header, xPosition + 2, yPosition);
+      xPosition += columnWidths[index];
+    });
+    
+    // Add table data
+    doc.setFontSize(9);
+    doc.setTextColor(0, 0, 0);
+    doc.setFillColor(255, 255, 255);
+    
+    prestamos.forEach((prestamo, index) => {
+      yPosition += 8;
+      
+      // Check if we need a new page
+      if (yPosition > 270) {
+        doc.addPage();
+        yPosition = 20;
+      }
+      
+      // Row background
+      doc.rect(20, yPosition - 5, 180, 8, 'F');
+      
+      // Row data
+      let xPos = 22;
+      
+      // Número
+      doc.text((index + 1).toString(), xPos, yPosition);
+      xPos += columnWidths[0];
+      
+      // Fecha
+      const fecha = new Date(prestamo.fechaSolicitud).toLocaleDateString('es-ES');
+      doc.text(fecha, xPos, yPosition);
+      xPos += columnWidths[1];
+      
+      // Lector
+      doc.text(prestamo.lector, xPos, yPosition);
+      xPos += columnWidths[2];
+      
+      // Bibliografía
+      doc.text(prestamo.bibliografia, xPos, yPosition);
+      xPos += columnWidths[3];
+      
+      // Estado
+      const estadoColor = this.getEstadoColor(prestamo.estado);
+      doc.setTextColor(estadoColor.r, estadoColor.g, estadoColor.b);
+      doc.text(prestamo.estado, xPos, yPosition);
+      doc.setTextColor(0, 0, 0); // Reset color
+    });
+    
+    // Add footer
+    const totalPages = doc.getNumberOfPages();
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.setFontSize(8);
+      doc.setTextColor(100, 100, 100);
+      doc.text(`Página ${i} de ${totalPages}`, 20, 290);
+    }
+    
+    // Save the PDF
+    const fileName = `prestamos_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(fileName);
+  }
+
+  private getEstadoColor(estado: string): { r: number, g: number, b: number } {
+    switch (estado) {
+      case 'Vigente':
+        return { r: 40, g: 167, b: 69 }; // Green
+      case 'Vencido':
+        return { r: 220, g: 53, b: 69 }; // Red
+      case 'Devuelto':
+        return { r: 255, g: 193, b: 7 }; // Yellow
+      default:
+        return { r: 0, g: 0, b: 0 }; // Black
+    }
   }
 } 

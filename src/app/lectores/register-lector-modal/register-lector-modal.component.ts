@@ -1,5 +1,16 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 
+interface Lector {
+  id: number;
+  selected: boolean;
+  fechaRegistro: string;
+  nombres: string;
+  apellidos: string;
+  dni: string;
+  correo: string;
+  tipo: string;
+}
+
 @Component({
   selector: 'app-register-lector-modal',
   templateUrl: './register-lector-modal.component.html',
@@ -7,7 +18,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 })
 export class RegisterLectorModalComponent {
   @Output() closeModal = new EventEmitter<void>();
-  @Output() registerSuccess = new EventEmitter<void>();
+  @Output() registerSuccess = new EventEmitter<Lector>();
 
   // Form data
   formData = {
@@ -32,11 +43,22 @@ export class RegisterLectorModalComponent {
 
   onSubmit(): void {
     if (this.validateForm()) {
-      // Here you would implement the actual registration logic
-      console.log('Registering lector:', this.formData);
+      // Create new lector object
+      const newLector: Lector = {
+        id: this.generateId(), // Generate a new ID
+        selected: false,
+        fechaRegistro: this.getCurrentDate(),
+        nombres: this.formData.nombres.trim(),
+        apellidos: this.formData.apellidos.trim(),
+        dni: this.formData.dni.trim(),
+        correo: this.formData.correo.trim(),
+        tipo: this.formData.tipo
+      };
+
+      console.log('Registering lector:', newLector);
       
-      // Simulate success
-      this.registerSuccess.emit();
+      // Emit the new lector data
+      this.registerSuccess.emit(newLector);
     }
   }
 
@@ -68,5 +90,18 @@ export class RegisterLectorModalComponent {
     }
 
     return Object.keys(this.errors).length === 0;
+  }
+
+  private generateId(): number {
+    // Generate a unique ID (in a real app, this would come from the backend)
+    return Date.now() + Math.floor(Math.random() * 1000);
+  }
+
+  private getCurrentDate(): string {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 } 

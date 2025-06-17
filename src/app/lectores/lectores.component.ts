@@ -209,7 +209,6 @@ export class LectoresComponent implements OnInit {
       );
       this.applyFilters();
       this.closeConfirmModal();
-      alert(`${selectedLectores.length} lector(es) eliminado(s) exitosamente`);
     };
     this.showConfirmModal = true;
   }
@@ -237,8 +236,14 @@ export class LectoresComponent implements OnInit {
   }
 
   // Método para manejar registro exitoso
-  onRegisterSuccess(): void {
+  onRegisterSuccess(newLector: Lector): void {
+    // Add the new lector to the original list
+    this.originalLectores.push(newLector);
+    
+    // Close the modal
     this.closeRegisterModal();
+    
+    // Apply filters to update the display
     this.applyFilters();
   }
 

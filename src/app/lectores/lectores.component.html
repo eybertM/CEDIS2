@@ -214,7 +214,7 @@
 <app-register-lector-modal 
   *ngIf="showRegisterModal"
   (closeModal)="closeRegisterModal()"
-  (registerSuccess)="onRegisterSuccess()">
+  (registerSuccess)="onRegisterSuccess($event)">
 </app-register-lector-modal>
 
 <!-- Modal de Edición -->
