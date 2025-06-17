@@ -1,0 +1,48 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Carga Masiva de Lectores</h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="upload-section">
+        <div class="file-input-container">
+          <input 
+            type="file" 
+            id="fileInput" 
+            accept=".csv,.xlsx,.xls"
+            (change)="onFileSelected($event)"
+            style="display: none;">
+          <label for="fileInput" class="file-input-label">
+            <i class="pe-7s-upload"></i>
+            <span>Seleccionar archivo</span>
+          </label>
+        </div>
+        
+        <div class="selected-file" *ngIf="selectedFile">
+          <p><strong>Archivo seleccionado:</strong> {{selectedFile.name}}</p>
+          <p><strong>Tamaño:</strong> {{(selectedFile.size / 1024).toFixed(2)}} KB</p>
+        </div>
+
+        <div class="upload-info">
+          <h5>Formato requerido:</h5>
+          <ul>
+            <li>Archivos soportados: CSV, Excel (.xlsx, .xls)</li>
+            <li>Columnas requeridas: Nombres, Apellidos, DNI, Correo, Tipo</li>
+            <li>El DNI debe tener 8 dígitos</li>
+            <li>El correo debe ser válido</li>
+            <li>Tipos válidos: Estudiante, Docente, Administrativo</li>
+          </ul>
+        </div>
+
+        <button 
+          class="btn-upload" 
+          (click)="onUpload()"
+          [disabled]="!selectedFile || isUploading">
+          <span *ngIf="!isUploading">Subir Archivo</span>
+          <span *ngIf="isUploading">Subiendo...</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 

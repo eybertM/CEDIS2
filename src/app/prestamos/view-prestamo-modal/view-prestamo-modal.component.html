@@ -1,0 +1,47 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+<div class="modal-header">
+      <h4 class="modal-title">Ver préstamo</h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+</div>
+<div class="modal-body">
+      <div class="document-details">
+        <!-- Lector -->
+  <div class="detail-group">
+      <label>Lector:</label>
+          <p>{{ prestamo.lector }}</p>
+        </div>
+
+        <!-- ID del Lector -->
+        <div class="detail-group">
+          <label>ID del Lector:</label>
+          <p>{{ prestamo.lectorId }}</p>
+    </div>
+
+        <!-- Bibliografía -->
+        <div class="detail-group">
+      <label>Bibliografía:</label>
+          <p>{{ prestamo.bibliografia }}</p>
+        </div>
+
+        <!-- ID de la Bibliografía -->
+        <div class="detail-group">
+          <label>ID de la Bibliografía:</label>
+          <p>{{ prestamo.bibliografiaId }}</p>
+    </div>
+
+        <!-- Fecha de Solicitud -->
+        <div class="detail-group">
+      <label>Fecha de Solicitud:</label>
+          <p>{{ prestamo.fechaSolicitud | date:'MM/dd/yyyy' }}</p>
+    </div>
+
+        <!-- Estado -->
+        <div class="detail-group">
+      <label>Estado:</label>
+          <p>{{ prestamo.estado }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

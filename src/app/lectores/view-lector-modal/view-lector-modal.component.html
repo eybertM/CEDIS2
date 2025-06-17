@@ -1,0 +1,47 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Ver lector</h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="document-details">
+        <!-- Fecha de Registro -->
+        <div class="detail-group">
+          <label>Fecha de Registro:</label>
+          <p>{{lector?.fechaRegistro | date:'MM/dd/yyyy'}}</p>
+        </div>
+
+        <!-- Nombres -->
+        <div class="detail-group">
+          <label>Nombres:</label>
+          <p>{{lector?.nombres}}</p>
+        </div>
+
+        <!-- Apellidos -->
+        <div class="detail-group">
+          <label>Apellidos:</label>
+          <p>{{lector?.apellidos}}</p>
+        </div>
+
+        <!-- DNI -->
+        <div class="detail-group">
+          <label>DNI:</label>
+          <p>{{lector?.dni}}</p>
+        </div>
+
+        <!-- Correo -->
+        <div class="detail-group">
+          <label>Correo:</label>
+          <p>{{lector?.correo}}</p>
+        </div>
+
+        <!-- Tipo -->
+        <div class="detail-group">
+          <label>Tipo:</label>
+          <p>{{lector?.tipo}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

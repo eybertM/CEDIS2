@@ -1,0 +1,86 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Registrar Nuevo Documento</h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="onSubmit()">
+        <!-- Título -->
+        <div class="form-group">
+          <label for="title">Título</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="title" 
+            [(ngModel)]="document.title" 
+            name="title" 
+            placeholder="Ingrese el título del documento"
+            required>
+        </div>
+
+        <!-- Categoría y Cantidad -->
+        <div class="row">
+          <div class="col-md-8">
+            <div class="form-group">
+              <label for="category">Categoría</label>
+              <select 
+                class="form-control" 
+                id="category" 
+                [(ngModel)]="document.category" 
+                name="category" 
+                required>
+                <option value="" disabled selected>Seleccione una categoría</option>
+                <option *ngFor="let cat of categories" [value]="cat">{{cat}}</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="quantity">Cantidad</label>
+              <input 
+                type="number" 
+                class="form-control" 
+                id="quantity" 
+                [(ngModel)]="document.quantity" 
+                name="quantity" 
+                min="1" 
+                placeholder="Cantidad"
+                required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fecha de publicación -->
+        <div class="form-group">
+          <label for="publicationDate">Fecha de publicación</label>
+          <input 
+            type="date" 
+            class="form-control" 
+            id="publicationDate" 
+            [(ngModel)]="document.publicationDate" 
+            name="publicationDate" 
+            required>
+        </div>
+
+        <!-- Autores -->
+        <div class="form-group">
+          <label for="authors">Autores</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="authors" 
+            [(ngModel)]="document.authors" 
+            name="authors" 
+            placeholder="Ingrese los autores del documento"
+            required>
+        </div>
+
+        <!-- Botón de registro -->
+        <div class="form-group text-right">
+          <button type="submit" class="btn btn-register">Registrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

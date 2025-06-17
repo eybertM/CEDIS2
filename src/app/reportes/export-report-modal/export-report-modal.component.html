@@ -1,0 +1,104 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="onBackdropClick($event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <i class="pe-7s-download me-2"></i>
+        Exportar Reporte de Lectores Morosos
+      </h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="export-summary">
+        <h6>Resumen del Reporte a Exportar</h6>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="summary-item">
+              <span class="label">Total de registros:</span>
+              <span class="value">{{reportData?.totalReaders || 0}}</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="summary-item">
+              <span class="label">Período:</span>
+              <span class="value">{{reportData?.period || 'No especificado'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="export-options">
+        <h6>Opciones de Exportación</h6>
+        
+        <!-- Formato de archivo -->
+        <div class="form-group">
+          <label class="form-label">Formato de archivo:</label>
+          <div class="format-options">
+            <div 
+              *ngFor="let format of availableFormats" 
+              class="format-option"
+              [class.active]="exportOptions.format === format.value"
+              (click)="exportOptions.format = format.value">
+              <i [class]="format.icon"></i>
+              <span>{{format.label}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Nombre del archivo -->
+        <div class="form-group">
+          <label for="fileName" class="form-label">Nombre del archivo:</label>
+          <div class="input-group">
+            <input 
+              type="text" 
+              class="form-control" 
+              id="fileName"
+              [(ngModel)]="exportOptions.fileName"
+              placeholder="Nombre del archivo">
+            <button 
+              class="btn btn-outline-secondary" 
+              type="button"
+              (click)="updateFileName()">
+              <i class="pe-7s-refresh"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Opciones adicionales -->
+        <div class="form-group">
+          <label class="form-label">Opciones adicionales:</label>
+          <div class="form-check">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              id="includeHeaders"
+              [(ngModel)]="exportOptions.includeHeaders">
+            <label class="form-check-label" for="includeHeaders">
+              Incluir encabezados de columnas
+            </label>
+          </div>
+          <div class="form-check">
+            <input 
+              class="form-check-input" 
+              type="checkbox" 
+              id="includeSummary"
+              [(ngModel)]="exportOptions.includeSummary">
+            <label class="form-check-label" for="includeSummary">
+              Incluir resumen del reporte
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div style="clear: both; padding-top: 20px;">
+        <button type="button" class="btn-cancel" (click)="onClose()">
+          Cancelar
+        </button>
+        <button type="button" class="btn-export" (click)="onExport()">
+          <i class="pe-7s-download me-2"></i>
+          Exportar
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,21 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Confirmar Acción</h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="confirm-message">
+        <p>{{message}}</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" (click)="onClose()">
+          Cancelar
+        </button>
+        <button class="btn-confirm" (click)="onConfirm()">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div> 

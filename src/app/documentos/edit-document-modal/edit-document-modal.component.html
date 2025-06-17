@@ -1,0 +1,106 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Editar Documento</h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="onSubmit()">
+        <!-- Título -->
+        <div class="form-group">
+          <label for="title">Título</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="title" 
+            [(ngModel)]="document.title" 
+            name="title"
+            required>
+        </div>
+
+        <!-- Categoría -->
+        <div class="form-group">
+          <label for="category">Categoría</label>
+          <select 
+            class="form-control" 
+            id="category" 
+            [(ngModel)]="document.category" 
+            name="category"
+            required>
+            <option *ngFor="let category of categories" [value]="category">
+              {{category}}
+            </option>
+          </select>
+        </div>
+
+        <!-- Versiones -->
+        <div class="form-group">
+          <label for="totalVersions">Total de Versiones</label>
+          <input 
+            type="number" 
+            class="form-control" 
+            id="totalVersions" 
+            [(ngModel)]="document.totalVersions" 
+            name="totalVersions"
+            required>
+        </div>
+
+        <!-- Fecha de publicación -->
+        <div class="form-group">
+          <label for="publicationDate">Fecha de publicación</label>
+          <input 
+            type="date" 
+            class="form-control" 
+            id="publicationDate" 
+            [(ngModel)]="document.publicationDate" 
+            name="publicationDate"
+            required>
+        </div>
+
+        <!-- Autores -->
+        <div class="form-group">
+          <label for="authors">Autores</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="authors" 
+            [(ngModel)]="document.authors" 
+            name="authors"
+            required>
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+          <label for="description">Descripción</label>
+          <textarea 
+            class="form-control" 
+            id="description" 
+            [(ngModel)]="document.description" 
+            name="description"
+            rows="3"></textarea>
+        </div>
+
+        <!-- Estado -->
+        <div class="form-group">
+          <label for="status">Estado</label>
+          <select 
+            class="form-control" 
+            id="status" 
+            [(ngModel)]="document.status" 
+            name="status"
+            required>
+            <option value="Nuevo">Nuevo</option>
+            <option value="En revisión">En revisión</option>
+            <option value="Publicado">Publicado</option>
+            <option value="Finalizado">Finalizado</option>
+          </select>
+        </div>
+
+        <!-- Botón de guardar -->
+        <div class="form-group text-right">
+          <button type="submit" class="btn btn-register">Guardar Cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

@@ -1,0 +1,249 @@
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Título principal fuera del card -->
+        <div class="page-title-section mb-4">
+          <h4 class="page-title">Documentos</h4>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <!-- Sección de Filtros -->
+            <div class="filters-section mb-4">
+              <h5 class="filters-title">Filtros</h5>
+              <div class="row">
+                <!-- Búsqueda por título o ID -->
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="searchInput">Buscar por título o ID</label>
+                    <div class="search-input-container">
+                      <input 
+                        type="text" 
+                        class="form-control search-input" 
+                        id="searchInput" 
+                        placeholder="Ingrese título o ID del documento"
+                        [(ngModel)]="searchTerm"
+                        (keyup.enter)="onSearch()">
+                      <button 
+                        class="search-button" 
+                        (click)="onSearch()">
+                        <i class="pe-7s-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Fecha de publicación -->
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="publicationDate">Fecha de publicación</label>
+                    <input 
+                      type="date" 
+                      class="form-control" 
+                      id="publicationDate"
+                      [(ngModel)]="publicationDate"
+                      (change)="onFilterChange()">
+                  </div>
+                </div>
+                
+                <!-- Categoría -->
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="category">Categoría</label>
+                    <select 
+                      class="form-control" 
+                      id="category"
+                      [(ngModel)]="selectedCategory"
+                      (change)="onFilterChange()">
+                      <option value="">Todas las categorías</option>
+                      <option *ngFor="let category of categories" [value]="category.name">
+                        {{category.name}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>      
+        <div class="card">
+          <div class="card-body">
+            <!-- Título de la lista de documentos -->
+            <div class="documents-title-section mb-3">
+              <div class="title-actions-container">
+                <div class="title-section">
+                  <h5 class="filters-title">Lista de Documentos</h5>
+                  <p class="selection-count">Seleccionados {{getSelectedDocuments().length}} de {{totalItems}}</p>
+                </div>
+                <div class="action-buttons">
+                  <div class="btn-group">
+                    <button 
+                      class="btn btn-primary" 
+                      title="Agregar documento"
+                      (click)="addDocument()">
+                      <i class="pe-7s-plus"></i>
+                    </button>
+                    <button 
+                      class="btn btn-success" 
+                      title="Descargar seleccionados"
+                      [disabled]="!getSelectedDocuments().length"
+                      (click)="downloadSelected()">
+                      <i class="pe-7s-download"></i>
+                    </button>
+                    <button 
+                      class="btn btn-info" 
+                      title="Subir lista de documentos"
+                      (click)="openUploadModal()">
+                      <i class="pe-7s-cloud-upload"></i>
+                    </button>
+                    <button 
+                      class="btn btn-danger" 
+                      title="Eliminar seleccionados"
+                      [disabled]="!getSelectedDocuments().length"
+                      (click)="deleteSelectedDocuments()">
+                      <i class="pe-7s-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de Documentos -->
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="selectAll" (change)="toggleSelectAll()">
+                      </div>
+                    </th>
+                    <th>Nro.</th>
+                    <th>Fecha de registro</th>
+                    <th>Título</th>
+                    <th>Fecha de publicación</th>
+                    <th>Categoría</th>
+                    <th>Autores</th>
+                    <th>Actual/Total</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let doc of paginatedDocuments; let i = index">
+                    <td>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="doc.selected">
+                      </div>
+                    </td>
+                    <td>{{startItem + i}}</td>
+                    <td>{{doc.registrationDate | date:'MM/dd/yyyy'}}</td>
+                    <td>
+                      {{doc.title}}
+                      <div class="id-subtitle">ID: {{doc.titleId}}</div>
+                    </td>
+                    <td>{{doc.publicationDate | date:'MM/dd/yyyy'}}</td>
+                    <td>{{doc.category}}</td>
+                    <td>{{doc.authors}}</td>
+                    <td>{{doc.currentVersion}}/{{doc.totalVersions}}</td>
+                    <td>
+                      <div class="btn-group">
+                        <button class="btn btn-sm btn-info" (click)="viewDocument(doc)" title="Ver">
+                          <i class="pe-7s-look"></i>
+                        </button>
+                        <button class="btn btn-sm btn-warning" (click)="editDocument(doc)" title="Editar">
+                          <i class="pe-7s-pen"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" (click)="deleteDocument(doc)" title="Eliminar">
+                          <i class="pe-7s-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginador -->
+            <div class="pagination-section">
+              <div class="pagination-container">
+                <div class="page-size-container">
+                  <label for="pageSize" class="me-2 mb-0">Filas por página:</label>
+                  <select 
+                    class="form-control form-control-sm page-size-select" 
+                    id="pageSize"
+                    [(ngModel)]="pageSize"
+                    (change)="onPageSizeChange($event)">
+                    <option *ngFor="let size of pageSizeOptions" [value]="size">
+                      {{size}}
+                    </option>
+                  </select>
+                </div>
+                <div class="pagination-info">
+                  <span class="me-3">{{startItem}}-{{endItem}} de {{totalItems}}</span>
+                  <div class="btn-group">
+                    <button 
+                      class="btn btn-sm btn-outline-secondary" 
+                      [disabled]="currentPage === 1"
+                      (click)="previousPage()">
+                      <i class="pe-7s-left-arrow"></i>
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-secondary" 
+                      [disabled]="currentPage === totalPages"
+                      (click)="nextPage()">
+                      <i class="pe-7s-right-arrow"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<app-register-document-modal 
+  *ngIf="showRegisterModal"
+  (closeModal)="onCloseModal()"
+  (saveDocument)="onSaveDocument($event)">
+</app-register-document-modal>
+
+<app-upload-documents-modal
+  *ngIf="showUploadModal"
+  (closeModal)="onCloseUploadModal()"
+  (uploadFile)="onUploadDocuments($event)">
+</app-upload-documents-modal>
+
+<app-edit-document-modal
+  *ngIf="showEditModal"
+  [document]="documentToEdit"
+  (closeModal)="onCloseEditModal()"
+  (saveDocument)="onSaveEditDocument($event)">
+</app-edit-document-modal>
+
+<app-confirm-action-modal
+  *ngIf="showDownloadConfirmModal"
+  title="Descargar Documentos"
+  message="¿Está seguro que desea descargar los documentos seleccionados?"
+  confirmButtonText="Descargar"
+  (closeModal)="onCloseDownloadConfirmModal()"
+  (confirmAction)="onConfirmDownload()">
+</app-confirm-action-modal>
+
+<app-confirm-action-modal
+  *ngIf="showDeleteConfirmModal"
+  title="Eliminar Documentos"
+  message="¿Está seguro que desea eliminar los documentos seleccionados? Esta acción no se puede deshacer."
+  confirmButtonText="Eliminar"
+  (closeModal)="onCloseDeleteConfirmModal()"
+  (confirmAction)="onConfirmDelete()">
+</app-confirm-action-modal>
+
+<app-view-document-modal
+  *ngIf="showViewModal"
+  [document]="documentToView"
+  (closeModal)="onCloseViewModal()">
+</app-view-document-modal> 

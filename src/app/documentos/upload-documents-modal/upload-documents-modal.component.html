@@ -1,0 +1,33 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Subir Lista de Documentos</h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="onSubmit()">
+        <!-- Descripción -->
+        <div class="form-group">          
+          <p class="description-text">Se debe subir la hoja de cálculo con el formato correcto</p>
+        </div>
+
+        <!-- Input para subir archivo -->
+        <div class="form-group">
+          <input 
+            type="file" 
+            class="form-control" 
+            id="fileUpload" 
+            accept=".xlsx,.xls,.csv"
+            (change)="onFileSelected($event)"
+            required>
+          <small class="form-text text-muted">Formatos aceptados: .xlsx, .xls, .csv</small>
+        </div>
+
+        <!-- Botón de subir -->
+        <div class="form-group text-right">
+          <button type="submit" class="btn btn-register">Subir</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

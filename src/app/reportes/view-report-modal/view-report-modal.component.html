@@ -1,0 +1,68 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="onBackdropClick($event)">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">
+        <i class="pe-7s-look me-2"></i>
+        Visualizar Reporte de Lectores Morosos
+      </h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="report-summary">
+        <h6>Resumen del Reporte</h6>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="summary-item">
+              <span class="label">Total de lectores:</span>
+              <span class="value">{{reportData?.totalReaders || 0}}</span>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="summary-item">
+              <span class="label">Período:</span>
+              <span class="value">{{reportData?.period || 'No especificado'}}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="report-preview">
+        <h6>Vista Previa</h6>
+        <div class="table-responsive">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Nombres y Apellidos</th>
+                <th>Tipo</th>
+                <th>Fecha de Préstamo</th>
+                <th>Fecha de Devolución</th>
+                <th>Días Vencidos Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let reader of reportData?.readers?.slice(0, 5)">
+                <td>{{reader.nombres}} {{reader.apellidos}}</td>
+                <td>{{reader.tipo}}</td>
+                <td class="date-column">{{reader.fechaPrestamo | date:'MM/dd/yyyy'}}</td>
+                <td class="date-column">{{reader.fechaDevolucion | date:'MM/dd/yyyy'}}</td>
+                <td>
+                  <span class="badge" [ngClass]="{
+                    'badge-success': reader.diasVencidosTotal >= 0 && reader.diasVencidosTotal <= 7,
+                    'badge-warning': reader.diasVencidosTotal > 7 && reader.diasVencidosTotal <= 15,
+                    'badge-danger': reader.diasVencidosTotal > 15
+                  }">
+                    {{reader.diasVencidosTotal}}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-muted small mt-2">
+          * Mostrando los primeros 5 registros como vista previa
+        </p>
+      </div>
+    </div>
+  </div>
+</div> 

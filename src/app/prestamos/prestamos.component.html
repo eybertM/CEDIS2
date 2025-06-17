@@ -1,0 +1,247 @@
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">  
+        <!-- Título principal fuera del card -->
+        <div class="page-title-section mb-4">
+          <h4 class="page-title">Préstamos</h4>
+        </div>
+
+        <div class="card">
+          <div class="card-body">
+            <!-- Sección de Filtros -->
+            <div class="filters-section mb-4">
+              <h5 class="filters-title">Filtros</h5>
+              <div class="row">
+                <!-- Búsqueda por lector o bibliografía -->
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="searchInput">Buscar por lector o bibliografía</label>
+                    <div class="search-input-container">
+                      <input 
+                        type="text" 
+                        class="form-control search-input" 
+                        id="searchInput" 
+                        placeholder="Ingrese lector o bibliografía"
+                        [(ngModel)]="searchTerm"
+                        (keyup.enter)="onSearch()">
+                      <button 
+                        class="search-button" 
+                        (click)="onSearch()">
+                        <i class="pe-7s-search"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Fecha de solicitud -->
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="fechaSolicitud">Fecha de solicitud</label>
+                    <input 
+                      type="date" 
+                      class="form-control" 
+                      id="fechaSolicitud"
+                      [(ngModel)]="fechaSolicitud"
+                      (change)="onFilterChange()">
+                  </div>
+                </div>
+                
+                <!-- Estado -->
+                <div class="col-md-4">
+                  <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <select 
+                      class="form-control" 
+                      id="estado"
+                      [(ngModel)]="selectedEstado"
+                      (change)="onFilterChange()">
+                      <option value="">Todos los estados</option>
+                      <option *ngFor="let estado of estados" [value]="estado">
+                        {{estado}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+          
+        <div class="card">
+          <div class="card-body">
+            <!-- Título de la lista de préstamos -->
+            <div class="documents-title-section mb-3">
+              <div class="title-actions-container">
+                <div class="title-section">
+                  <h5 class="filters-title">Lista de Préstamos</h5>
+                  <p class="selection-count">Seleccionados {{getSelectedPrestamos().length}} de {{totalItems}}</p>
+                </div>
+                <div class="action-buttons">
+                  <div class="btn-group">
+                    <button 
+                      class="btn btn-primary" 
+                      title="Agregar préstamo"
+                      (click)="addPrestamo()">
+                      <i class="pe-7s-plus"></i>
+                    </button>
+                    <button 
+                      class="btn btn-success" 
+                      title="Descargar seleccionados"
+                      [disabled]="!getSelectedPrestamos().length"
+                      (click)="downloadSelected()">
+                      <i class="pe-7s-download"></i>
+                    </button>
+                    <button 
+                      class="btn btn-danger" 
+                      title="Eliminar seleccionados"
+                      [disabled]="!getSelectedPrestamos().length"
+                      (click)="deletePrestamo(prestamoToEdit!)">
+                      <i class="pe-7s-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de Préstamos -->
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" (change)="selectAll($event)">
+                      </div>
+                    </th>
+                    <th>Nro</th>
+                    <th>Fecha de solicitud</th>
+                    <th>Lector</th>
+                    <th>Bibliografía</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let prestamo of paginatedPrestamos; let i = index">
+                    <td>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="prestamo.selected">
+                      </div>
+                    </td>
+                    <td>{{startItem + i}}</td>
+                    <td>{{prestamo.fechaSolicitud | date:'MM/dd/yyyy'}}</td>
+                    <td>
+                      {{prestamo.lector}}
+                      <div class="id-subtitle">ID: {{prestamo.lectorId}}</div>
+                    </td>
+                    <td>
+                      {{prestamo.bibliografia}}
+                      <div class="id-subtitle">ID: {{prestamo.bibliografiaId}}</div>
+                    </td>
+                    <td>
+                      <span [ngClass]="{
+                        'badge': true,
+                        'badge-success': prestamo.estado === 'Vigente',
+                        'badge-warning': prestamo.estado === 'Vencido',
+                        'badge-info': prestamo.estado === 'Devuelto'
+                      }">
+                        {{prestamo.estado}}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="btn-group">
+                        <button class="btn btn-sm btn-info" (click)="viewPrestamo(prestamo)" title="Ver">
+                          <i class="pe-7s-look"></i>
+                        </button>
+                        <button class="btn btn-sm btn-warning" (click)="editPrestamo(prestamo)" title="Editar">
+                          <i class="pe-7s-pen"></i>
+                        </button>
+                        <button class="btn btn-sm btn-danger" (click)="deletePrestamo(prestamo)" title="Eliminar">
+                          <i class="pe-7s-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginador -->
+            <div class="pagination-section">
+              <div class="pagination-container">
+                <div class="page-size-container">
+                  <label for="pageSize" class="me-2 mb-0">Filas por página:</label>
+                  <select 
+                    class="form-control form-control-sm page-size-select" 
+                    id="pageSize"
+                    [(ngModel)]="pageSize"
+                    (change)="onPageSizeChange($event)">
+                    <option *ngFor="let size of pageSizeOptions" [value]="size">
+                      {{size}}
+                    </option>
+                  </select>
+                </div>
+                <div class="pagination-info">
+                  <span class="me-3">{{startItem}}-{{endItem}} de {{totalItems}}</span>
+                  <div class="btn-group">
+                    <button 
+                      class="btn btn-sm btn-outline-secondary" 
+                      [disabled]="currentPage === 1"
+                      (click)="previousPage()">
+                      <i class="pe-7s-left-arrow"></i>
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-secondary" 
+                      [disabled]="currentPage === totalPages"
+                      (click)="nextPage()">
+                      <i class="pe-7s-right-arrow"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> 
+    </div> 
+  </div>
+</div>
+
+<!-- Modales -->
+<app-register-prestamo-modal 
+  *ngIf="showRegisterModal"
+  (closeModal)="onCloseModal()"
+  (savePrestamo)="onSavePrestamo($event)">
+</app-register-prestamo-modal>
+
+<app-edit-prestamo-modal
+  *ngIf="showEditModal"
+  [prestamo]="prestamoToEdit"
+  (closeModal)="onCloseEditModal()"
+  (savePrestamo)="onSaveEditPrestamo($event)">
+</app-edit-prestamo-modal>
+
+<app-view-prestamo-modal
+  *ngIf="showViewModal"
+  [prestamo]="prestamoToView"
+  (closeModal)="onCloseViewModal()">
+</app-view-prestamo-modal>
+
+<app-confirm-action-modal
+  *ngIf="showDownloadConfirmModal"
+  title="Descargar Préstamos"
+  message="¿Está seguro que desea descargar los préstamos seleccionados?"
+  confirmButtonText="Descargar"
+  (closeModal)="onCloseDownloadConfirmModal()"
+  (confirmAction)="onConfirmDownload()">
+</app-confirm-action-modal>
+
+<app-confirm-action-modal
+  *ngIf="showDeleteConfirmModal"
+  title="Eliminar Préstamo"
+  message="¿Está seguro que desea eliminar este préstamo? Esta acción no se puede deshacer."
+  confirmButtonText="Eliminar"
+  (closeModal)="onCloseDeleteConfirmModal()"
+  (confirmAction)="onConfirmDelete()">
+</app-confirm-action-modal> 

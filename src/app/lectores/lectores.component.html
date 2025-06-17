@@ -1,0 +1,241 @@
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Título principal fuera del card -->
+        <div class="page-title-section mb-4">
+          <h4 class="page-title">Gestión de Lectores</h4>
+        </div>
+
+        <!-- Card de Filtros -->
+        <div class="card">
+          <div class="card-body">
+            <!-- Sección de Filtros -->
+            <div class="filters-section mb-4">
+              <h5 class="filters-title">Filtros</h5>
+              <div class="row">
+                <!-- Búsqueda -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="searchTerm">Buscar</label>
+                    <input 
+                      type="text" 
+                      class="form-control" 
+                      id="searchTerm"
+                      [(ngModel)]="searchTerm"
+                      (input)="onFilterChange()"
+                      placeholder="Buscar por nombre, DNI o correo...">
+                  </div>
+                </div>
+                
+                <!-- Tipo -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="selectedType">Tipo</label>
+                    <select 
+                      class="form-control" 
+                      id="selectedType"
+                      [(ngModel)]="selectedType"
+                      (change)="onFilterChange()">
+                      <option value="">Todos los tipos</option>
+                      <option *ngFor="let tipo of tipoOptions" [value]="tipo">
+                        {{tipo}}
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card de Lista de Lectores -->
+        <div class="card">
+          <div class="card-body">
+            <!-- Título de la lista de lectores -->
+            <div class="documents-title-section mb-3">
+              <div class="title-actions-container">
+                <div class="title-section">
+                  <h5 class="filters-title">Lista de Lectores</h5>
+                  <p class="selection-count">Seleccionados {{getSelectedLectores().length}} de {{totalItems}}</p>
+                </div>
+                <div class="action-buttons">
+                  <div class="btn-group">
+                    <button 
+                      class="btn btn-primary" 
+                      title="Agregar lector"
+                      (click)="openRegisterModal()">
+                      <i class="pe-7s-plus"></i>
+                    </button>
+                    <button 
+                      class="btn btn-success" 
+                      title="Descargar seleccionados"
+                      [disabled]="!getSelectedLectores().length"
+                      (click)="downloadSelected()">
+                      <i class="pe-7s-download"></i>
+                    </button>
+                    <button 
+                      class="btn btn-info" 
+                      title="Subir lista de lectores"
+                      (click)="openUploadModal()">
+                      <i class="pe-7s-cloud-upload"></i>
+                    </button>
+                    <button 
+                      class="btn btn-danger" 
+                      title="Eliminar seleccionados"
+                      [disabled]="!getSelectedLectores().length"
+                      (click)="deleteSelectedLectores()">
+                      <i class="pe-7s-trash"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de Lectores -->
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="selectAll" (change)="toggleSelectAll()">
+                      </div>
+                    </th>
+                    <th>Nro.</th>
+                    <th>Fecha de Registro</th>
+                    <th>Nombres y Apellidos</th>
+                    <th>DNI</th>
+                    <th>Correo</th>
+                    <th>Tipo</th>
+                    <th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let lector of paginatedLectores; let i = index">
+                    <td>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="lector.selected">
+                      </div>
+                    </td>
+                    <td>{{startItem + i}}</td>
+                    <td class="date-column">{{lector.fechaRegistro | date:'MM/dd/yyyy'}}</td>
+                    <td>{{lector.nombres}} {{lector.apellidos}}</td>
+                    <td>{{lector.dni}}</td>
+                    <td>{{lector.correo}}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'badge-primary': lector.tipo === 'Estudiante',
+                        'badge-success': lector.tipo === 'Docente',
+                        'badge-warning': lector.tipo === 'Administrativo'
+                      }">
+                        {{lector.tipo}}
+                      </span>
+                    </td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <button 
+                          type="button" 
+                          class="btn btn-sm btn-outline-primary"
+                          (click)="openViewModal(lector)"
+                          title="Ver lector">
+                          <i class="pe-7s-look"></i>
+                        </button>
+                        <button 
+                          type="button" 
+                          class="btn btn-sm btn-outline-warning"
+                          (click)="openEditModal(lector)"
+                          title="Editar lector">
+                          <i class="pe-7s-pen"></i>
+                        </button>
+                        <button 
+                          type="button" 
+                          class="btn btn-sm btn-outline-danger"
+                          (click)="deleteLector(lector)"
+                          title="Eliminar lector">
+                          <i class="pe-7s-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginador -->
+            <div class="pagination-section">
+              <div class="pagination-container">
+                <div class="page-size-container">
+                  <label for="pageSize" class="me-2 mb-0">Filas por página:</label>
+                  <select 
+                    class="form-control form-control-sm page-size-select" 
+                    id="pageSize"
+                    [(ngModel)]="pageSize"
+                    (change)="onPageSizeChange($event)">
+                    <option *ngFor="let size of pageSizeOptions" [value]="size">
+                      {{size}}
+                    </option>
+                  </select>
+                </div>
+                <div class="pagination-info">
+                  <span class="me-3">{{startItem}}-{{endItem}} de {{totalItems}}</span>
+                  <div class="btn-group">
+                    <button 
+                      class="btn btn-sm btn-outline-secondary" 
+                      [disabled]="currentPage === 1"
+                      (click)="previousPage()">
+                      <i class="pe-7s-left-arrow"></i>
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-secondary" 
+                      [disabled]="currentPage === totalPages"
+                      (click)="nextPage()">
+                      <i class="pe-7s-right-arrow"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Visualización -->
+<app-view-lector-modal 
+  *ngIf="showViewModal"
+  [lector]="selectedLector"
+  (closeModal)="closeViewModal()">
+</app-view-lector-modal>
+
+<!-- Modal de Registro -->
+<app-register-lector-modal 
+  *ngIf="showRegisterModal"
+  (closeModal)="closeRegisterModal()"
+  (registerSuccess)="onRegisterSuccess()">
+</app-register-lector-modal>
+
+<!-- Modal de Edición -->
+<app-edit-lector-modal 
+  *ngIf="showEditModal"
+  [lector]="selectedLector"
+  (closeModal)="closeEditModal()"
+  (editSuccess)="onEditSuccess()">
+</app-edit-lector-modal>
+
+<!-- Modal de Carga Masiva -->
+<app-upload-lectores-modal 
+  *ngIf="showUploadModal"
+  (closeModal)="closeUploadModal()"
+  (uploadSuccess)="onUploadSuccess()">
+</app-upload-lectores-modal>
+
+<!-- Modal de Confirmación -->
+<app-confirm-action-modal 
+  *ngIf="showConfirmModal"
+  [message]="confirmMessage"
+  (closeModal)="closeConfirmModal()"
+  (confirmAction)="onConfirmAction()">
+</app-confirm-action-modal> 

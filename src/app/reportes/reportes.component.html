@@ -1,0 +1,199 @@
+<div class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <!-- Título principal fuera del card -->
+        <div class="page-title-section mb-4">
+          <h4 class="page-title">Reporte de Lectores Morosos</h4>
+        </div>
+
+        <!-- Card de Filtros -->
+        <div class="card">
+          <div class="card-body">
+            <!-- Sección de Filtros -->
+            <div class="filters-section mb-4">
+              <h5 class="filters-title">Filtros</h5>
+              <div class="row">
+                <!-- Fecha de inicio -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="fechaInicio">Fecha de inicio del filtro</label>
+                    <input 
+                      type="date" 
+                      class="form-control" 
+                      id="fechaInicio"
+                      [(ngModel)]="fechaInicio"
+                      (change)="onFilterChange()">
+                    <small class="form-text text-muted">Filtrar registros con fechas de préstamo o devolución desde esta fecha</small>
+                  </div>
+                </div>
+                
+                <!-- Fecha de fin -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="fechaFin">Fecha de fin del filtro</label>
+                    <input 
+                      type="date" 
+                      class="form-control" 
+                      id="fechaFin"
+                      [(ngModel)]="fechaFin"
+                      (change)="onFilterChange()">
+                    <small class="form-text text-muted">Filtrar registros con fechas de préstamo o devolución hasta esta fecha</small>
+                  </div>
+                </div>
+              </div>
+              <!-- Botones de acción abajo a la derecha -->
+              <div class="filtros-actions">
+                <button 
+                  type="button" 
+                  class="btn btn-sm me-2"
+                  (click)="openViewReportModal()">
+                  <i class="pe-7s-look me-1"></i>
+                  Visualizar Reporte
+                </button>
+                <button 
+                  type="button" 
+                  class="btn btn-sm"
+                  (click)="openExportReportModal()">
+                  <i class="pe-7s-download me-1"></i>
+                  Exportar Reporte
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card de Lista de Lectores Morosos -->
+        <div class="card">
+          <div class="card-body">
+            <!-- Título de la lista de lectores morosos -->
+            <div class="documents-title-section mb-3">
+              <div class="title-actions-container">
+                <div class="title-section">
+                  <h5 class="filters-title">Lista de Lectores Morosos</h5>
+                  <p class="selection-count">Total de registros: {{totalItems}}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabla de Lectores Morosos -->
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="selectAll" (change)="toggleSelectAll()">
+                      </div>
+                    </th>
+                    <th>Nro.</th>
+                    <th>Nombres y Apellidos</th>
+                    <th>Tipo</th>
+                    <th>Correo Electrónico</th>
+                    <th>Fecha de Préstamo</th>
+                    <th>Fecha de Devolución</th>
+                    <th>Días Vencidos 1er Préstamo</th>
+                    <th>Días Vencidos 2do Préstamo</th>
+                    <th>Días Vencidos Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let reader of paginatedReaders; let i = index">
+                    <td>
+                      <div class="form-check">
+                        <input class="form-check-input" type="checkbox" [(ngModel)]="reader.selected">
+                      </div>
+                    </td>
+                    <td>{{startItem + i}}</td>
+                    <td>{{reader.nombres}} {{reader.apellidos}}</td>
+                    <td>{{reader.tipo}}</td>
+                    <td>{{reader.correoElectronico}}</td>
+                    <td class="date-column">{{reader.fechaPrestamo | date:'MM/dd/yyyy'}}</td>
+                    <td class="date-column">{{reader.fechaDevolucion | date:'MM/dd/yyyy'}}</td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'badge-success': reader.diasVencidosPrimerPrestamo >= 0 && reader.diasVencidosPrimerPrestamo <= 7,
+                        'badge-warning': reader.diasVencidosPrimerPrestamo > 7 && reader.diasVencidosPrimerPrestamo <= 15,
+                        'badge-danger': reader.diasVencidosPrimerPrestamo > 15
+                      }">
+                        {{reader.diasVencidosPrimerPrestamo}}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'badge-success': reader.diasVencidosSegundoPrestamo >= 0 && reader.diasVencidosSegundoPrestamo <= 7,
+                        'badge-warning': reader.diasVencidosSegundoPrestamo > 7 && reader.diasVencidosSegundoPrestamo <= 15,
+                        'badge-danger': reader.diasVencidosSegundoPrestamo > 15
+                      }">
+                        {{reader.diasVencidosSegundoPrestamo}}
+                      </span>
+                    </td>
+                    <td>
+                      <span class="badge" [ngClass]="{
+                        'badge-success': reader.diasVencidosTotal >= 0 && reader.diasVencidosTotal <= 7,
+                        'badge-warning': reader.diasVencidosTotal > 7 && reader.diasVencidosTotal <= 15,
+                        'badge-danger': reader.diasVencidosTotal > 15
+                      }">
+                        {{reader.diasVencidosTotal}}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Paginador -->
+            <div class="pagination-section">
+              <div class="pagination-container">
+                <div class="page-size-container">
+                  <label for="pageSize" class="me-2 mb-0">Filas por página:</label>
+                  <select 
+                    class="form-control form-control-sm page-size-select" 
+                    id="pageSize"
+                    [(ngModel)]="pageSize"
+                    (change)="onPageSizeChange($event)">
+                    <option *ngFor="let size of pageSizeOptions" [value]="size">
+                      {{size}}
+                    </option>
+                  </select>
+                </div>
+                <div class="pagination-info">
+                  <span class="me-3">{{startItem}}-{{endItem}} de {{totalItems}}</span>
+                  <div class="btn-group">
+                    <button 
+                      class="btn btn-sm btn-outline-secondary" 
+                      [disabled]="currentPage === 1"
+                      (click)="previousPage()">
+                      <i class="pe-7s-left-arrow"></i>
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-outline-secondary" 
+                      [disabled]="currentPage === totalPages"
+                      (click)="nextPage()">
+                      <i class="pe-7s-right-arrow"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de Visualización de Reporte -->
+<app-view-report-modal 
+  [isOpen]="showViewModal"
+  [reportData]="currentReportData"
+  (closeModal)="closeViewModal()">
+</app-view-report-modal>
+
+<!-- Modal de Exportación de Reporte -->
+<app-export-report-modal 
+  [isOpen]="showExportModal"
+  [reportData]="currentReportData"
+  (closeModal)="closeExportModal()"
+  (exportReport)="handleExport($event)">
+</app-export-report-modal> 

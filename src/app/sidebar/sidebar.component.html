@@ -1,0 +1,35 @@
+<div class="sidebar-wrapper">
+    <div class="logo">
+        <a href="#" class="simple-text">
+            <div class="logo-img">
+                <div class="initials-logo">{{userInitials}}</div>
+            </div>
+            <div class="user-info">
+                <div class="user-name">{{userName}}</div>
+                <div class="user-role">{{userRole}}</div>
+            </div>
+        </a>
+    </div>
+    
+    <!-- Main Navigation Menu -->
+    <ul class="nav responsive-nav">
+        <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}}">
+            <a [routerLink]="[menuItem.path]">
+                <i class="{{menuItem.icon}}"></i>
+                <p>{{menuItem.title}}</p>
+            </a>
+        </li>
+    </ul>
+    
+    <!-- Logout Section at Bottom -->
+    <div class="logout-section">
+        <ul class="nav">
+            <li>
+                <a (click)="logout()" class="logout-link">
+                    <i class="pe-7s-power"></i>
+                    <p>Cerrar sesión</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>

@@ -1,0 +1,93 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+<div class="modal-header">
+      <h4 class="modal-title">Registrar Nuevo Préstamo</h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <form (ngSubmit)="onSubmit()">
+        <!-- Lector -->
+        <div class="form-group">
+          <label for="lector">Lector</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="lector" 
+            [(ngModel)]="prestamo.lector" 
+            name="lector"
+            placeholder="Ingrese el nombre del lector"
+            required>
+        </div>
+
+        <!-- ID del Lector -->
+        <div class="form-group">
+          <label for="lectorId">ID del Lector</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="lectorId" 
+            [(ngModel)]="prestamo.lectorId" 
+            name="lectorId"
+            placeholder="Ingrese el ID del lector"
+            required>
+</div>
+
+        <!-- Bibliografía -->
+    <div class="form-group">
+          <label for="bibliografia">Bibliografía</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="bibliografia" 
+            [(ngModel)]="prestamo.bibliografia" 
+            name="bibliografia"
+            placeholder="Ingrese la bibliografía"
+            required>
+    </div>
+
+        <!-- ID de la Bibliografía -->
+    <div class="form-group">
+          <label for="bibliografiaId">ID de la Bibliografía</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="bibliografiaId" 
+            [(ngModel)]="prestamo.bibliografiaId" 
+            name="bibliografiaId"
+            placeholder="Ingrese el ID de la bibliografía"
+            required>
+    </div>
+
+        <!-- Fecha de Solicitud -->
+    <div class="form-group">
+          <label for="fechaSolicitud">Fecha de Solicitud</label>
+          <input 
+            type="date" 
+            class="form-control" 
+            id="fechaSolicitud" 
+            [(ngModel)]="prestamo.fechaSolicitud" 
+            name="fechaSolicitud"
+            required>
+    </div>
+
+        <!-- Estado -->
+    <div class="form-group">
+          <label for="estado">Estado</label>
+          <select 
+            class="form-control" 
+            id="estado" 
+            [(ngModel)]="prestamo.estado" 
+            name="estado"
+            required>
+            <option *ngFor="let estado of estados" [value]="estado">{{estado}}</option>
+      </select>
+    </div>
+
+        <!-- Botón de registro -->
+        <div class="form-group text-right">
+          <button type="submit" class="btn btn-register">Registrar</button>
+        </div>
+  </form>
+</div>
+  </div>
+</div> 

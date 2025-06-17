@@ -1,0 +1,58 @@
+<div class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h4 class="modal-title">Ver documento</h4>
+      <button class="close-button" (click)="onClose()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="document-details">
+        <!-- Título -->
+        <div class="detail-group">
+          <label>Título:</label>
+          <p>{{document.title}}</p>
+        </div>
+
+        <!-- Categoría -->
+        <div class="detail-group">
+          <label>Categoría:</label>
+          <p>{{document.category}}</p>
+        </div>
+
+        <!-- Fechas -->
+        <div class="detail-group">
+          <label>Fecha de registro:</label>
+          <p>{{document.registrationDate | date:'MM/dd/yyyy'}}</p>
+        </div>
+
+        <div class="detail-group">
+          <label>Fecha de publicación:</label>
+          <p>{{document.publicationDate | date:'MM/dd/yyyy'}}</p>
+        </div>
+
+        <!-- Autores -->
+        <div class="detail-group">
+          <label>Autores:</label>
+          <p>{{document.authors}}</p>
+        </div>
+
+        <!-- Versiones -->
+        <div class="detail-group">
+          <label>Versiones:</label>
+          <p>Versión actual: {{document.currentVersion}} de {{document.totalVersions}}</p>
+        </div>
+
+        <!-- Estado -->
+        <div class="detail-group">
+          <label>Estado:</label>
+          <p>{{document.status}}</p>
+        </div>
+
+        <!-- Descripción -->
+        <div class="detail-group">
+          <label>Descripción:</label>
+          <p>{{document.description}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 

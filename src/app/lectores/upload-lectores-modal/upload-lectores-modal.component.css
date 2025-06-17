@@ -1,0 +1,160 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 0 10px 0;
+  border-bottom: 1px solid rgba(220, 53, 69, 0.2);
+}
+
+.modal-title {
+  color: #dc3545;
+  font-weight: 600;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+  text-align: left;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #666;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  margin-left: auto;
+}
+
+.close-button:hover {
+  color: #dc3545;
+}
+
+.modal-body {
+  padding: 10px 0;
+}
+
+.upload-section {
+  text-align: center;
+}
+
+.file-input-container {
+  margin-bottom: 20px;
+}
+
+.file-input-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 30px;
+  border: 2px dashed #dc3545;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #dc3545;
+  font-weight: 500;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.file-input-label:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+  border-color: #c82333;
+}
+
+.file-input-label i {
+  font-size: 24px;
+}
+
+.selected-file {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  text-align: left;
+}
+
+.selected-file p {
+  margin: 5px 0;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.upload-info {
+  margin: 20px 0;
+  text-align: left;
+}
+
+.upload-info h5 {
+  color: #dc3545;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.upload-info ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.upload-info li {
+  padding: 5px 0;
+  color: #666;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+  position: relative;
+  padding-left: 20px;
+}
+
+.upload-info li:before {
+  content: "•";
+  color: #dc3545;
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.btn-upload {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.btn-upload:hover:not(:disabled) {
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.btn-upload:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+} 
